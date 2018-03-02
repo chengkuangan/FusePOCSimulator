@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2014-2017, Red Hat, Inc. and/or its affiliates, and individual
+    contributors by the @authors tag. 
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<!-- Configures the Camel Context-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:cxf="http://camel.apache.org/schema/cxf"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans           http://www.springframework.org/schema/beans/spring-beans.xsd                  http://camel.apache.org/schema/spring      http://camel.apache.org/schema/spring/camel-spring.xsd          http://camel.apache.org/schema/cxf      http://camel.apache.org/schema/cxf/camel-cxf.xsd     http://www.springframework.org/schema/jdbc      http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
+    <cxf:rsServer address="http://localhost:9390/"
+        id="resilientEndpoint" loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
+        <cxf:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+        </cxf:providers>
+    </cxf:rsServer>
+    <cxf:rsServer address="http://localhost:9391/"
+        id="qradarOffensesEndpoint" loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
+        <cxf:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+        </cxf:providers>
+    </cxf:rsServer>
+    <cxf:rsServer address="http://localhost:9392/"
+        id="qradarOffensesClosingReasonsEndpoint"
+        loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
+        <cxf:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+        </cxf:providers>
+    </cxf:rsServer>
+    <cxf:rsServer address="http://localhost:9393/"
+        id="qradarSourceAddressesEndpoint" loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
+        <cxf:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+        </cxf:providers>
+    </cxf:rsServer>
+    <cxf:rsServer address="http://localhost:9394/"
+        id="qradarLocalDestinationAddressesEndpoint"
+        loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
+        <cxf:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+        </cxf:providers>
+    </cxf:rsServer>
+    <cxf:rsServer address="http://localhost:9395/"
+        id="qradarDomainsEndpoint" loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
+        <cxf:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+        </cxf:providers>
+    </cxf:rsServer>
+    <cxf:rsServer address="http://localhost:9396/"
+        id="qradarSetsEndpoint" loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
+        <cxf:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+        </cxf:providers>
+    </cxf:rsServer>
+    <cxf:rsServer address="http://localhost:9397/"
+        id="qradarOffenseTypesEndpoint" loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
+        <cxf:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+        </cxf:providers>
+    </cxf:rsServer>
+    <camelContext id="_camelContext1" xmlns="http://camel.apache.org/schema/spring">
+        <route id="_simulatedResilient">
+            <from id="_resilient" uri="cxfrs:bean:resilientEndpoint"/>
+            <log id="_log2" message="Simulated Resilient -> Body -> ${body}"/>
+        </route>
+        <route id="_simulatedQradar_01">
+            <from id="_from1" uri="cxfrs:bean:qradarOffensesEndpoint"/>
+            <log id="_log1" message="${body}"/>
+            <choice id="_choice1">
+                <when id="_when1">
+                    <simple>${body} == '' || ${body} == '42'</simple>
+                    <setBody id="_sampleResponse">
+                        <simple>[{"username_count": 42, "description": "String", "rules": [{"id": 42, "type": "ADE_RULE"}], "event_count": 42, "flow_count": 42, "assigned_to": "String", "security_category_count": 42, "follow_up": true, "source_address_ids": [42], "source_count": 42, "inactive": true, "protected": true, "category_count": 42, "source_network": "String", "destination_networks": ["String"], "closing_user": "String", "close_time": 42, "remote_destination_count": 42, "start_time": 42, "last_updated_time": 42, "credibility": 42, "magnitude": 42, "id": 42, "categories": ["String"], "severity": 42, "policy_category_count": 42, "device_count": 42, "closing_reason_id": 42, "offense_type": 42, "relevance": 42, "domain_id": 42, "offense_source": "String", "local_destination_address_ids": [42], "local_destination_count": 42, "status": "OPEN"}]</simple>
+                    </setBody>
+                    <setHeader headerName="Exchange.HTTP_RESPONSE_CODE" id="_200">
+                        <simple>200</simple>
+                    </setHeader>
+                </when>
+                <otherwise id="_otherwise1">
+                    <setHeader headerName="Exchange.HTTP_RESPONSE_CODE" id="_404">
+                        <simple>404</simple>
+                    </setHeader>
+                    <setBody id="_setBody1">
+                        <simple>{"status":"not found"}</simple>
+                    </setBody>
+                </otherwise>
+            </choice>
+        </route>
+        <route id="_offenses_closing_reasons">
+            <from id="_from2" uri="cxfrs:bean:qradarOffensesClosingReasonsEndpoint"/>
+            <setBody id="_sampleResponse2">
+                <simple>[{"id": 42, "is_deleted": true, "is_reserved": true, "text": "String"}]</simple>
+            </setBody>
+        </route>
+        <route id="_sourceAddresses">
+            <from id="_from3" uri="cxfrs:bean:qradarSourceAddressesEndpoint"/>
+            <setBody id="_setBody2">
+                <simple>[{"domain_id": 42,
+"event_flow_count": 42,
+"first_event_flow_seen": 42,
+"id": 42,
+"last_event_flow_seen": 42,
+"local_destination_address_ids": [
+42 ],
+"magnitude": 42,
+"network": "String",
+"offense_ids": [
+42 ],
+        "source_ip": "String"}]</simple>
+            </setBody>
+        </route>
+        <route id="_localDestinationAddresses">
+            <from id="_from4" uri="cxfrs:bean:qradarLocalDestinationAddressesEndpoint"/>
+            <setBody id="_setBody3">
+                <simple>{"id": 42,
+    "ip": "String",
+    "message": "String",
+    "status": "EXCEPTION"}</simple>
+            </setBody>
+        </route>
+        <route id="_route1">
+            <from id="_from5" uri="cxfrs:bean:qradarDomainsEndpoint"/>
+            <setBody id="_setBody4">
+                <simple>{
+"eps": {
+        "allocated": 42,
+        "overallocated": true,
+        "total": 42
+}, "fpm": {
+        "allocated": 42,
+        "overallocated": true,
+        "total": 42
+} }</simple>
+            </setBody>
+        </route>
+        <route id="_route2">
+            <from id="_from6" uri="cxfrs:bean:qradarSetsEndpoint"/>
+            <setBody id="_setBody5">
+                <simple>[
+{
+"creation_time": 42,
+"element_type": "ALN",
+"name": "String",
+"number_of_elements": 42,
+"time_to_live": "String",
+"timeout_type": "UNKNOWN"
+} ]
+</simple>
+            </setBody>
+        </route>
+        <route id="_route3">
+            <from id="_from7" uri="cxfrs:bean:qradarOffenseTypesEndpoint"/>
+            <setBody id="_setBody6">
+                <simple>[
+{
+"custom": true,
+"database_type": "EVENTS",
+"id": 42,
+"name": "String",
+"property_name": "String"}]</simple>
+            </setBody>
+        </route>
+    </camelContext>
+</beans>
