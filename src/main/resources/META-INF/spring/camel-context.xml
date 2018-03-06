@@ -17,52 +17,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:cxf="http://camel.apache.org/schema/cxf"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans           http://www.springframework.org/schema/beans/spring-beans.xsd                  http://camel.apache.org/schema/spring      http://camel.apache.org/schema/spring/camel-spring.xsd          http://camel.apache.org/schema/cxf      http://camel.apache.org/schema/cxf/camel-cxf.xsd     http://www.springframework.org/schema/jdbc      http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
+    <cxf:rsServer address="http://localhost:9391/"
+        id="simulatedEndpoint" loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
+        <cxf:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+        </cxf:providers>
+    </cxf:rsServer>
     <cxf:rsServer address="http://localhost:9390/"
         id="resilientEndpoint" loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
-        <cxf:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-        </cxf:providers>
-    </cxf:rsServer>
-    <cxf:rsServer address="http://localhost:9391/"
-        id="qradarOffensesEndpoint" loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
-        <cxf:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-        </cxf:providers>
-    </cxf:rsServer>
-    <cxf:rsServer address="http://localhost:9392/"
-        id="qradarOffensesClosingReasonsEndpoint"
-        loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
-        <cxf:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-        </cxf:providers>
-    </cxf:rsServer>
-    <cxf:rsServer address="http://localhost:9393/"
-        id="qradarSourceAddressesEndpoint" loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
-        <cxf:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-        </cxf:providers>
-    </cxf:rsServer>
-    <cxf:rsServer address="http://localhost:9394/"
-        id="qradarLocalDestinationAddressesEndpoint"
-        loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
-        <cxf:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-        </cxf:providers>
-    </cxf:rsServer>
-    <cxf:rsServer address="http://localhost:9395/"
-        id="qradarDomainsEndpoint" loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
-        <cxf:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-        </cxf:providers>
-    </cxf:rsServer>
-    <cxf:rsServer address="http://localhost:9396/"
-        id="qradarSetsEndpoint" loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
-        <cxf:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-        </cxf:providers>
-    </cxf:rsServer>
-    <cxf:rsServer address="http://localhost:9397/"
-        id="qradarOffenseTypesEndpoint" loggingFeatureEnabled="true" serviceClass="com.jboss.poc.services.SimulatedService">
         <cxf:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
         </cxf:providers>
@@ -72,39 +34,37 @@
             <from id="_resilient" uri="cxfrs:bean:resilientEndpoint"/>
             <log id="_log2" message="Simulated Resilient -> Body -> ${body}"/>
         </route>
-        <route id="_simulatedQradar_01">
-            <from id="_from1" uri="cxfrs:bean:qradarOffensesEndpoint"/>
-            <log id="_log1" message="${body}"/>
-            <choice id="_choice1">
-                <when id="_when1">
-                    <simple>${body} == '' || ${body} == '42'</simple>
-                    <setBody id="_sampleResponse">
-                        <simple>[{"username_count": 42, "description": "String", "rules": [{"id": 42, "type": "ADE_RULE"}], "event_count": 42, "flow_count": 42, "assigned_to": "String", "security_category_count": 42, "follow_up": true, "source_address_ids": [42], "source_count": 42, "inactive": true, "protected": true, "category_count": 42, "source_network": "String", "destination_networks": ["String"], "closing_user": "String", "close_time": 42, "remote_destination_count": 42, "start_time": 42, "last_updated_time": 42, "credibility": 42, "magnitude": 42, "id": 42, "categories": ["String"], "severity": 42, "policy_category_count": 42, "device_count": 42, "closing_reason_id": 42, "offense_type": 42, "relevance": 42, "domain_id": 42, "offense_source": "String", "local_destination_address_ids": [42], "local_destination_count": 42, "status": "OPEN"}]</simple>
-                    </setBody>
-                    <setHeader headerName="Exchange.HTTP_RESPONSE_CODE" id="_200">
-                        <simple>200</simple>
-                    </setHeader>
-                </when>
-                <otherwise id="_otherwise1">
-                    <setHeader headerName="Exchange.HTTP_RESPONSE_CODE" id="_404">
-                        <simple>404</simple>
-                    </setHeader>
+        <route id="_simulatedRoute">
+            <from id="_from8" uri="cxfrs:bean:simulatedEndpoint"/>
+            <log id="_log5" message="http path -> ${header.CamelHttpPath}, method -> ${header.CamelHttpMethod}, raw query -> ${header.CamelHttpRawQuery}, query -> ${header.CamelHttpQuery}"/>
+            <choice id="_choice2">
+                <when id="_when2">
+                    <simple>${header.CamelHttpPath} == 'api/siem/offenses'</simple>
                     <setBody id="_setBody1">
-                        <simple>{"status":"not found"}</simple>
+                        <simple>[
+                        {"username_count": 42, "description": "String", "rules": [{"id": 42, "type": "ADE_RULE"}], "event_count": 42, "flow_count": 42, "assigned_to": "String", "security_category_count": 42, "follow_up": true, "source_address_ids": [42], "source_count": 42, "inactive": true, "protected": true, "category_count": 42, "source_network": "String", "destination_networks": ["String"], "closing_user": "String", "close_time": 42, "remote_destination_count": 42, "start_time": 42, "last_updated_time": 42, "credibility": 42, "magnitude": 42, "id": 42, "categories": ["String"], "severity": 42, "policy_category_count": 42, "device_count": 42, "closing_reason_id": 42, "offense_type": 42, "relevance": 42, "domain_id": 42, "offense_source": "String", "local_destination_address_ids": [42], "local_destination_count": 42, "status": "OPEN"},
+                        {"username_count": 43, "description": "String", "rules": [{"id": 43, "type": "ADE_RULE"}], "event_count": 43, "flow_count": 43, "assigned_to": "String", "security_category_count": 43, "follow_up": true, "source_address_ids": [43], "source_count": 43, "inactive": true, "protected": true, "category_count": 43, "source_network": "String", "destination_networks": ["String"], "closing_user": "String", "close_time": 43, "remote_destination_count": 43, "start_time": 43, "last_updated_time": 43, "credibility": 43, "magnitude": 43, "id": 43, "categories": ["String"], "severity": 43, "policy_category_count": 43, "device_count": 43, "closing_reason_id": 43, "offense_type": 43, "relevance": 43, "domain_id": 43, "offense_source": "String", "local_destination_address_ids": [43], "local_destination_count": 43, "status": "OPEN"}
+                        ]</simple>
                     </setBody>
-                </otherwise>
-            </choice>
-        </route>
-        <route id="_offenses_closing_reasons">
-            <from id="_from2" uri="cxfrs:bean:qradarOffensesClosingReasonsEndpoint"/>
-            <setBody id="_sampleResponse2">
-                <simple>[{"id": 42, "is_deleted": true, "is_reserved": true, "text": "String"}]</simple>
-            </setBody>
-        </route>
-        <route id="_sourceAddresses">
-            <from id="_from3" uri="cxfrs:bean:qradarSourceAddressesEndpoint"/>
-            <setBody id="_setBody2">
-                <simple>[{"domain_id": 42,
+                </when>
+                <when id="_when1">
+                    <simple>${header.CamelHttpPath} == 'api/siem/offenses/42'</simple>
+                    <setBody id="_setBody2">
+                        <simple>[
+                        {"username_count": 42, "description": "String", "rules": [{"id": 42, "type": "ADE_RULE"}], "event_count": 42, "flow_count": 42, "assigned_to": "String", "security_category_count": 42, "follow_up": true, "source_address_ids": [42], "source_count": 42, "inactive": true, "protected": true, "category_count": 42, "source_network": "String", "destination_networks": ["String"], "closing_user": "String", "close_time": 42, "remote_destination_count": 42, "start_time": 42, "last_updated_time": 42, "credibility": 42, "magnitude": 42, "id": 42, "categories": ["String"], "severity": 42, "policy_category_count": 42, "device_count": 42, "closing_reason_id": 42, "offense_type": 42, "relevance": 42, "domain_id": 42, "offense_source": "String", "local_destination_address_ids": [42], "local_destination_count": 42, "status": "OPEN"}
+                        ]</simple>
+                    </setBody>
+                </when>
+                <when id="_when3">
+                    <simple>${header.CamelHttpPath} == 'api/siem/offense_closing_reasons'</simple>
+                    <setBody id="_setBody3">
+                        <simple>[{"id": 42, "is_deleted": true, "is_reserved": true, "text": "String"}]</simple>
+                    </setBody>
+                </when>
+                <when id="_when4">
+                    <simple>${header.CamelHttpPath} == 'api/siem/source_addresses'</simple>
+                    <setBody id="_setBody4">
+                        <simple>[{"domain_id": 42,
 "event_flow_count": 42,
 "first_event_flow_seen": 42,
 "id": 42,
@@ -116,21 +76,159 @@
 "offense_ids": [
 42 ],
         "source_ip": "String"}]</simple>
-            </setBody>
-        </route>
-        <route id="_localDestinationAddresses">
-            <from id="_from4" uri="cxfrs:bean:qradarLocalDestinationAddressesEndpoint"/>
-            <setBody id="_setBody3">
-                <simple>{"id": 42,
+                    </setBody>
+                </when>
+                <when id="_when5">
+                    <simple>${header.CamelHttpPath} == 'api/siem/local_destination_addresses'</simple>
+                    <setBody id="_setBody5">
+                        <simple>{"id": 42,
     "ip": "String",
     "message": "String",
     "status": "EXCEPTION"}</simple>
-            </setBody>
-        </route>
-        <route id="_route1">
-            <from id="_from5" uri="cxfrs:bean:qradarDomainsEndpoint"/>
-            <setBody id="_setBody4">
-                <simple>{
+                    </setBody>
+                </when>
+                <when id="_when10">
+                    <simple>${header.CamelHttpPath} == 'api/ariel/searches'</simple>
+                    <choice id="_choice3">
+                        <when id="_when20">
+                            <simple>${header.CamelHttpMethod} == 'POST'</simple>
+                            <log id="_log1" message="here at POST method"/>
+                            <setBody id="_setBody6">
+                                <simple>
+                        {
+                        
+  "cursor_id": "s16",
+  "compressed_data_file_count": 0,
+  "compressed_data_total_size": 0,
+  "data_file_count": 5470,
+  "data_total_size": 67183115,
+  "index_file_count": 0,
+  "index_total_size": 0,
+  "processed_record_count": 1256462,
+  "error_messages": [
+    {
+      "code": "String",
+      "contexts": [
+"String" ],
+      "message": "String",
+      "severity": "INFO"
+    }
+  ],
+  "desired_retention_time_msec": 86400000,
+  "progress": 46,
+  "progress_details": [
+    0,
+    0,
+    0,
+    0,
+    66957,
+    652657,
+    76594,
+    89809,
+    86032,
+    107729
+  ],
+  "query_execution_time": 1480,
+  "query_string": "SELECT sourceip, starttime from events
+                   into s16 where sourceip
+                   in (select destinationip from events)
+                   parameters snapshotsize=2, PROGRESSDETAILSRESOLUTION=10",
+  "record_count": 1240923,
+  "save_results": false,
+  "status": "EXECUTE",
+  "snapshot": {
+"events": [ {
+        "sourceip": "10.100.65.20",
+        "starttime": "1467049610018"
+      },
+      {
+        "sourceip": "10.100.100.121",
+        "starttime": "1467049610019"
+} ]
+  },
+  "subsearch_ids": [
+     "sub_id_1"
+   ],
+  "search_id": "s16"
+                        }
+                        </simple>
+                            </setBody>
+                        </when>
+                        <when id="_when21">
+                            <simple>${header.CamelHttpMethod} == 'GET'</simple>
+                            <log id="_log3" message="here at GET method"/>
+                            <setBody id="_setBody7">
+                                <simple>{["s16"]}</simple>
+                            </setBody>
+                        </when>
+                    </choice>
+                </when>
+                <when id="_when11">
+                    <simple>${header.CamelHttpPath} == 'api/ariel/searches/s16'</simple>
+                    <setBody id="_setBody8">
+                        <simple>{
+                        "cursor_id": "s16",
+  "compressed_data_file_count": 0,
+  "compressed_data_total_size": 0,
+  "data_file_count": 5470,
+  "data_total_size": 67183115,
+  "index_file_count": 0,
+  "index_total_size": 0,
+  "processed_record_count": 1256462,
+  "error_messages": [
+    {
+      "code": "String",
+      "contexts": [
+"String" ],
+      "message": "String",
+    "severity": "INFO"
+  }
+],
+"desired_retention_time_msec": 86400000,
+"progress": 46,
+"progress_details": [
+  0,
+  0,
+  0,
+  0,
+  66957,
+  652657,
+  76594,
+  89809,
+  86032,
+  107729
+],
+"query_execution_time": 1480,
+"query_string": "SELECT sourceip, starttime, qid, sourceport from events into s16
+                 where sourceip in (select destinationip from events) parameters
+                 snapshotsize=2, PROGRESSDETAILSRESOLUTION=10",
+"record_count": 1240923,
+"save_results": false,
+"status": "EXECUTE",
+"snapshot": {
+"events": [ {
+      "sourceip": "10.100.65.20",
+      "starttime": 1467049610018,
+      "qid": 10034,
+      "sourceport": 13675
+      }, {
+        "sourceip": "10.100.100.121",
+        "starttime": 1467049610019,
+        "qid": 20034,
+        "sourceport": 80
+} ]
+  },
+  "subsearch_ids": [
+     "sub_id_1"
+   ],
+  "search_id": "s16"
+                        }</simple>
+                    </setBody>
+                </when>
+                <when id="_when7">
+                    <simple>${header.CamelHttpPath} == 'api/config/domain_management/domains'</simple>
+                    <setBody id="_setBody9">
+                        <simple>{
 "eps": {
         "allocated": 42,
         "overallocated": true,
@@ -140,12 +238,12 @@
         "overallocated": true,
         "total": 42
 } }</simple>
-            </setBody>
-        </route>
-        <route id="_route2">
-            <from id="_from6" uri="cxfrs:bean:qradarSetsEndpoint"/>
-            <setBody id="_setBody5">
-                <simple>[
+                    </setBody>
+                </when>
+                <when id="_when8">
+                    <simple>${header.CamelHttpPath} == 'api/reference_data/sets'</simple>
+                    <setBody id="_setBody10">
+                        <simple>[
 {
 "creation_time": 42,
 "element_type": "ALN",
@@ -155,19 +253,21 @@
 "timeout_type": "UNKNOWN"
 } ]
 </simple>
-            </setBody>
-        </route>
-        <route id="_route3">
-            <from id="_from7" uri="cxfrs:bean:qradarOffenseTypesEndpoint"/>
-            <setBody id="_setBody6">
-                <simple>[
+                    </setBody>
+                </when>
+                <when id="_when9">
+                    <simple>${header.CamelHttpPath} == 'api/siem/offense_types'</simple>
+                    <setBody id="_setBody11">
+                        <simple>[
 {
 "custom": true,
 "database_type": "EVENTS",
 "id": 42,
 "name": "String",
 "property_name": "String"}]</simple>
-            </setBody>
+                    </setBody>
+                </when>
+            </choice>
         </route>
     </camelContext>
 </beans>

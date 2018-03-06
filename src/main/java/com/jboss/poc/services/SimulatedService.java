@@ -25,7 +25,7 @@ public class SimulatedService {
 	}
 	
 	@GET
-	@Path("/siem/offenses")
+	@Path("/api/siem/offenses")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces (MediaType.APPLICATION_JSON)
 	public String getOffenses(){
@@ -33,7 +33,7 @@ public class SimulatedService {
 	}
 	
 	@GET
-	@Path("/siem/offenses/{offense_id}")
+	@Path("/api/siem/offenses/{offense_id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces (MediaType.APPLICATION_JSON)
 	public String getOffenses(@PathParam("offense_id") String offense_id){
@@ -41,7 +41,7 @@ public class SimulatedService {
 	}
 	
 	@GET
-	@Path("/siem/offense_closing_reasons")
+	@Path("/api/siem/offense_closing_reasons")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces (MediaType.APPLICATION_JSON)
 	public String getOffensesClosingReasons(){
@@ -49,7 +49,7 @@ public class SimulatedService {
 	}
 	
 	@GET
-	@Path("/siem/source_addresses")
+	@Path("/api/siem/source_addresses")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces (MediaType.APPLICATION_JSON)
 	public String getSourceAddresses(){
@@ -57,7 +57,7 @@ public class SimulatedService {
 	}
 	
 	@GET
-	@Path("/siem/local_destination_addresses")
+	@Path("/api/siem/local_destination_addresses")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces (MediaType.APPLICATION_JSON)
 	public String getLocalDestinationAddresses(){
@@ -65,7 +65,7 @@ public class SimulatedService {
 	}
 	
 	@GET
-	@Path("/config/domain_management/domains")
+	@Path("/api/config/domain_management/domains")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces (MediaType.APPLICATION_JSON)
 	public String getDomains(){
@@ -73,7 +73,7 @@ public class SimulatedService {
 	}
 	
 	@GET
-	@Path("/reference_data/sets")
+	@Path("/api/reference_data/sets")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces (MediaType.APPLICATION_JSON)
 	public String getSets(){
@@ -81,10 +81,34 @@ public class SimulatedService {
 	}
 	
 	@GET
-	@Path("/siem/offense_types")
+	@Path("/api/siem/offense_types")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces (MediaType.APPLICATION_JSON)
 	public String getOffenseTypes(){
+		return null;
+	}
+	
+	@POST
+	@Path("/api/ariel/searches")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces (MediaType.APPLICATION_JSON)
+	public String postArielSearch(){
+		return null;
+	}
+	
+	@GET
+	@Path("/api/ariel/searches")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces (MediaType.APPLICATION_JSON)
+	public String getArielSearchId(){
+		return null;
+	}
+	
+	@GET
+	@Path("/api/ariel/searches/{search_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces (MediaType.APPLICATION_JSON)
+	public String getArielSearchResult(@PathParam("search_id") String search_id){
 		return null;
 	}
 	
