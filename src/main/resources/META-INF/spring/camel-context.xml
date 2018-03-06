@@ -39,21 +39,71 @@
             <log id="_log5" message="http path -> ${header.CamelHttpPath}, method -> ${header.CamelHttpMethod}, raw query -> ${header.CamelHttpRawQuery}, query -> ${header.CamelHttpQuery}"/>
             <choice id="_choice2">
                 <when id="_when2">
-                    <simple>${header.CamelHttpPath} == 'api/siem/offenses'</simple>
-                    <setBody id="_setBody1">
-                        <simple>[
+                    <simple>${header.CamelHttpPath} contains 'api/siem/offenses'</simple>
+                    <choice id="_choice1">
+                        <when id="_when6">
+                            <simple>${header.CamelHttpMethod} == 'POST'</simple>
+                            <log id="_log4" message="offenses -> POST method -> here 1"/>
+                            <setBody id="_setBody12">
+                                <simple>{
+                                "assigned_to": "String",
+    "categories": [
+"String" ],
+    "category_count": 42,
+    "close_time": 42,
+    "closing_reason_id": 42,
+    "closing_user": "String",
+    "credibility": 42,
+    "description": "String",
+    "destination_networks": [
+"String" ],
+    "device_count": 42,
+    "domain_id": 42,
+    "event_count": 42,
+    "flow_count": 42,
+    "follow_up": true,
+    "id": 42,
+    "inactive": true,
+    "last_updated_time": 42,
+    "local_destination_address_ids": [
+42 ],
+    "local_destination_count": 42,
+    "magnitude": 42,
+    "offense_source": "String",
+    "offense_type": 42,
+    "policy_category_count": 42,
+    "protected": true,
+    "relevance": 42,
+    "remote_destination_count": 42,
+    "rules": [
+{
+"id": 42,
+            "type": "ADE_RULE"
+        }
+    ],
+    "security_category_count": 42,
+    "severity": 42,
+    "source_address_ids": [
+42 ],
+    "source_count": 42,
+    "source_network": "String",
+    "start_time": 42,
+    "status": "OPEN",
+    "username_count": 42
+                                }</simple>
+                            </setBody>
+                        </when>
+                        <when id="_when12">
+                            <simple>${header.CamelHttpMethod} == 'GET'</simple>
+                            <log id="_log6" message="offenses -> GET method -> here 1"/>
+                            <setBody id="_setBody1">
+                                <simple>[
                         {"username_count": 42, "description": "String", "rules": [{"id": 42, "type": "ADE_RULE"}], "event_count": 42, "flow_count": 42, "assigned_to": "String", "security_category_count": 42, "follow_up": true, "source_address_ids": [42], "source_count": 42, "inactive": true, "protected": true, "category_count": 42, "source_network": "String", "destination_networks": ["String"], "closing_user": "String", "close_time": 42, "remote_destination_count": 42, "start_time": 42, "last_updated_time": 42, "credibility": 42, "magnitude": 42, "id": 42, "categories": ["String"], "severity": 42, "policy_category_count": 42, "device_count": 42, "closing_reason_id": 42, "offense_type": 42, "relevance": 42, "domain_id": 42, "offense_source": "String", "local_destination_address_ids": [42], "local_destination_count": 42, "status": "OPEN"},
                         {"username_count": 43, "description": "String", "rules": [{"id": 43, "type": "ADE_RULE"}], "event_count": 43, "flow_count": 43, "assigned_to": "String", "security_category_count": 43, "follow_up": true, "source_address_ids": [43], "source_count": 43, "inactive": true, "protected": true, "category_count": 43, "source_network": "String", "destination_networks": ["String"], "closing_user": "String", "close_time": 43, "remote_destination_count": 43, "start_time": 43, "last_updated_time": 43, "credibility": 43, "magnitude": 43, "id": 43, "categories": ["String"], "severity": 43, "policy_category_count": 43, "device_count": 43, "closing_reason_id": 43, "offense_type": 43, "relevance": 43, "domain_id": 43, "offense_source": "String", "local_destination_address_ids": [43], "local_destination_count": 43, "status": "OPEN"}
                         ]</simple>
-                    </setBody>
-                </when>
-                <when id="_when1">
-                    <simple>${header.CamelHttpPath} == 'api/siem/offenses/42'</simple>
-                    <setBody id="_setBody2">
-                        <simple>[
-                        {"username_count": 42, "description": "String", "rules": [{"id": 42, "type": "ADE_RULE"}], "event_count": 42, "flow_count": 42, "assigned_to": "String", "security_category_count": 42, "follow_up": true, "source_address_ids": [42], "source_count": 42, "inactive": true, "protected": true, "category_count": 42, "source_network": "String", "destination_networks": ["String"], "closing_user": "String", "close_time": 42, "remote_destination_count": 42, "start_time": 42, "last_updated_time": 42, "credibility": 42, "magnitude": 42, "id": 42, "categories": ["String"], "severity": 42, "policy_category_count": 42, "device_count": 42, "closing_reason_id": 42, "offense_type": 42, "relevance": 42, "domain_id": 42, "offense_source": "String", "local_destination_address_ids": [42], "local_destination_count": 42, "status": "OPEN"}
-                        ]</simple>
-                    </setBody>
+                            </setBody>
+                        </when>
+                    </choice>
                 </when>
                 <when id="_when3">
                     <simple>${header.CamelHttpPath} == 'api/siem/offense_closing_reasons'</simple>
@@ -242,8 +292,24 @@
                 </when>
                 <when id="_when8">
                     <simple>${header.CamelHttpPath} == 'api/reference_data/sets'</simple>
-                    <setBody id="_setBody10">
-                        <simple>[
+                    <choice id="_choice4">
+                        <when id="_when1">
+                            <simple>${header.CamelHttpMethod} == 'POST'</simple>
+                            <setBody id="_setBody2">
+                            	<simple>{
+    "creation_time": 42,
+    "element_type": "ALN",
+    "name": "String",
+    "number_of_elements": 42,
+    "time_to_live": "String",
+    "timeout_type": "LAST_SEEN"
+}</simple>
+                            </setBody>
+                        </when>
+                        <when id="_when13">
+                            <simple>${header.CamelHttpMethod} == 'GET'</simple>
+                            <setBody id="_setBody10">
+                                <simple>[
 {
 "creation_time": 42,
 "element_type": "ALN",
@@ -253,7 +319,9 @@
 "timeout_type": "UNKNOWN"
 } ]
 </simple>
-                    </setBody>
+                            </setBody>
+                        </when>
+                    </choice>
                 </when>
                 <when id="_when9">
                     <simple>${header.CamelHttpPath} == 'api/siem/offense_types'</simple>

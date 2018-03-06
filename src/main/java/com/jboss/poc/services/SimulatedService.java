@@ -32,11 +32,11 @@ public class SimulatedService {
 		return null;
 	}
 	
-	@GET
+	@POST
 	@Path("/api/siem/offenses/{offense_id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces (MediaType.APPLICATION_JSON)
-	public String getOffenses(@PathParam("offense_id") String offense_id){
+	public String postOffenses(@PathParam("offense_id") String offense_id){
 		return null;
 	}
 	
@@ -77,6 +77,14 @@ public class SimulatedService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces (MediaType.APPLICATION_JSON)
 	public String getSets(){
+		return null;
+	}
+	
+	@POST
+	@Path("/api/reference_data/sets")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces (MediaType.APPLICATION_JSON)
+	public String postSets(){
 		return null;
 	}
 	
