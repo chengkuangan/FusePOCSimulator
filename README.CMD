@@ -1,4 +1,4 @@
-Camel Project for Spring 
+A Rest API Simulator for QRadar 
 =========================================
 
 To build, CD to the source root directory
