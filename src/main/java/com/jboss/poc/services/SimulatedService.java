@@ -120,6 +120,21 @@ public class SimulatedService {
 		return null;
 	}
 	
+	@POST
+	@Path("/rest/session")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces (MediaType.APPLICATION_JSON)
+	public String resilientAuth(@Body String credential){
+		return null;
+	}
+	
+	@GET
+	@Path("/rest/orgs/201/incidents")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces (MediaType.APPLICATION_JSON)
+	public String resilientIncidents(@Body String credential){
+		return null;
+	}
 	
 	
 }

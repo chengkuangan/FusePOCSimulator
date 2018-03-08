@@ -296,7 +296,7 @@
                         <when id="_when1">
                             <simple>${header.CamelHttpMethod} == 'POST'</simple>
                             <setBody id="_setBody2">
-                            	<simple>{
+                                <simple>{
     "creation_time": 42,
     "element_type": "ALN",
     "name": "String",
@@ -334,6 +334,71 @@
 "name": "String",
 "property_name": "String"}]</simple>
                     </setBody>
+                </when>
+                <when id="_when14">
+                    <simple>${header.CamelHttpPath} == 'rest/session'</simple>
+                    <setBody id="_setBody13">
+                        <simple>{
+
+"orgs":
+[
+{
+"id": 203,
+"name": "Bluemix",
+"addr":null,
+"addr2": null,
+"city": null,
+"state": null,
+"zip" : null,
+"perms": {
+	"administrator" : false,
+	"observer" : false,
+	"master_administrator": true,
+	"create_incs": true,
+	"create_shared_layout" : true
+},
+"enabled" : true,
+"attachments_enabled" : true,
+"tasks_private": false,
+"has_saml": false,
+"require_saml": false,
+"twofactor_auth_domain": null,
+"has_available_twofactor": false,
+"authorized_ldap_group": null,
+"supports_ldap" : false,
+"incident_deletion_allowed": true,
+"twofactor_cookie_lifetime_secs": 0
+}
+],
+"user_id": 16,
+"user_fname": "Admin",
+"user_lname": "User",
+"user_email": "admin@mail.com",
+"saml_alias": null,
+"crsf_token": "asdasd",
+"session_ip": "192.168.0.1",
+"is_ldap": false,
+"is_saml": false
+
+}</simple>
+                    </setBody>
+                </when>
+                <when id="_when15">
+                    <simple>${header.CamelHttpPath} == 'rest/orgs/201/incidents'</simple>
+                    <log id="_log7" message="testResilientIncidents -> header.X-sess-id -> ${header.X-sess-id}"/>
+                    <choice id="_choice5">
+                        <when id="_when16">
+                            <simple>${header.X-sess-id} == 'asdasd'</simple>
+                            <setBody id="_setBody14">
+                                <simple>{"authenticated" : true}</simple>
+                            </setBody>
+                        </when>
+                        <otherwise id="_otherwise1">
+                            <setBody id="_setBody15">
+                                <simple>{"authenticated" : false}</simple>
+                            </setBody>
+                        </otherwise>
+                    </choice>
                 </when>
             </choice>
         </route>
