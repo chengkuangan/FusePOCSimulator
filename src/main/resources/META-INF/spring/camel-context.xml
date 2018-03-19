@@ -339,59 +339,88 @@
                     <simple>${header.CamelHttpPath} == 'rest/session'</simple>
                     <setBody id="_setBody13">
                         <simple>{
-
-"orgs":
-[
-{
-"id": 203,
-"name": "Bluemix",
-"addr":null,
-"addr2": null,
-"city": null,
-"state": null,
-"zip" : null,
-"perms": {
-	"administrator" : false,
-	"observer" : false,
-	"master_administrator": true,
-	"create_incs": true,
-	"create_shared_layout" : true
-},
-"enabled" : true,
-"attachments_enabled" : true,
-"tasks_private": false,
-"has_saml": false,
-"require_saml": false,
-"twofactor_auth_domain": null,
-"has_available_twofactor": false,
-"authorized_ldap_group": null,
-"supports_ldap" : false,
-"incident_deletion_allowed": true,
-"twofactor_cookie_lifetime_secs": 0
-}
-],
-"user_id": 16,
-"user_fname": "Admin",
-"user_lname": "User",
-"user_email": "admin@mail.com",
-"saml_alias": null,
-"crsf_token": "asdasd",
-"session_ip": "192.168.0.1",
-"is_ldap": false,
-"is_saml": false
-
+    "orgs": [
+        {
+            "id": 201,
+            "name": "Company",
+            "addr": null,
+            "addr2": null,
+            "city": null,
+            "state": null,
+            "zip": null,
+            "perms": {
+                "administrator": false,
+                "observer": false,
+                "master_administrator": true,
+                "create_incs": true,
+                "create_shared_layout": true
+            },
+            "enabled": true,
+            "attachments_enabled": true,
+            "tasks_private": false,
+            "has_saml": false,
+            "require_saml": false,
+            "twofactor_auth_domain": null,
+            "has_available_twofactor": false,
+            "authorized_ldap_group": null,
+            "supports_ldap": false,
+            "incident_deletion_allowed": true,
+            "session_timeout": 1200,
+            "effective_permissions": [
+                49,
+                50,
+                51,
+                52,
+                53,
+                85,
+                54,
+                55,
+                56,
+                58,
+                59,
+                60,
+                61,
+                62,
+                63,
+                101,
+                102,
+                103,
+                104,
+                105
+            ],
+            "role_handles": [
+                1001
+            ],
+            "twofactor_cookie_lifetime_secs": 0
+        }
+    ],
+    "user_id": 1,
+    "user_fname": "Admin",
+    "user_lname": "admin",
+    "user_email": "admin@email.com",
+    "saml_alias": null,
+    "csrf_token": "1ab11dae740ad34733820dc8dc08b193",
+    "session_ip": "172.30.1.87",
+    "is_saml": false,
+    "is_ldap": false
 }</simple>
                     </setBody>
+                    <setHeader headerName="Set-Cookie" id="_setHeader2">
+                        <simple>JSESSIONID=23123123123123; path=/</simple>
+                    </setHeader>
                 </when>
                 <when id="_when15">
-                    <simple>${header.CamelHttpPath} == 'rest/orgs/201/incidents'</simple>
+                    <simple>${header.CamelHttpPath} == 'rest/orgs/210/incidents'</simple>
                     <log id="_log7" message="testResilientIncidents -> header.X-sess-id -> ${header.X-sess-id}"/>
                     <choice id="_choice5">
                         <when id="_when16">
-                            <simple>${header.X-sess-id} == 'asdasd'</simple>
+                            <simple>${header.X-sess-id} == '1ab11dae740ad34733820dc8dc08b193'</simple>
                             <setBody id="_setBody14">
                                 <simple>{"authenticated" : true}</simple>
                             </setBody>
+                            <setHeader headerName="Set-Cookie" id="_setHeader1">
+                                <simple>JSESSIONID=12312314124124124124; path=/</simple>
+                            </setHeader>
                         </when>
                         <otherwise id="_otherwise1">
                             <setBody id="_setBody15">
